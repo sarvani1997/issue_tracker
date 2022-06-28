@@ -2,13 +2,14 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import React from "react";
+import Link from "next/link";
 
 const UserCreator = () => {
   const inputRef = React.useRef<HTMLInputElement | null>(null);
   const client = trpc.useContext();
-  const { mutate, isLoading } = trpc.useMutation("git.create", {
+  const { mutate, isLoading } = trpc.useMutation("user.create-user", {
     onSuccess: () => {
-      client.invalidateQueries(["git.get-all-users"]);
+      client.invalidateQueries(["user.get-all-users"]);
       if (!inputRef.current) return;
       inputRef.current.value = "";
     },
@@ -27,19 +28,27 @@ const UserCreator = () => {
   );
 };
 
-const Home: NextPage = () => {
-  const { data, isLoading } = trpc.useQuery(["git.get-all-users"]);
+const Users = () => {
+  const { data, isLoading } = trpc.useQuery(["user.get-all-users"]);
 
   if (isLoading || !data) return <div>Loading ....</div>;
 
   return (
     <>
       {data.map((user) => {
-        return <div>{user.name}</div>;
+        return (
+          <div key={user.id}>
+            <Link href={`/all-issues`}>
+              <button onClick={() => localStorage.setItem("user", user.id)}>
+                {user.name}
+              </button>
+            </Link>
+          </div>
+        );
       })}
       <UserCreator />
     </>
   );
 };
 
-export default Home;
+export default Users;
