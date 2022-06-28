@@ -23,6 +23,9 @@ const Issues = () => {
       <Link href="my-issues">
         <button>My Issues</button>
       </Link>
+      <Link href="create-issues">
+        <button>Create Issues</button>
+      </Link>
       {data.map((issue) => {
         let userName = userData.find((user) => user.id === issue.userId)?.name;
 

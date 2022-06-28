@@ -34,6 +34,9 @@ const MyIssues = () => {
 
   return (
     <>
+      <Link href="create-issues">
+        <button>Create Issues</button>
+      </Link>
       {data.map((issue) => {
         let userName = userData.find((user) => user.id === issue.userId)?.name;
 
