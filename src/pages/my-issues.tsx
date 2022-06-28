@@ -5,24 +5,35 @@ import React from "react";
 import Router from "next/router";
 import Link from "next/link";
 
-const Issues = () => {
-  const { data, isLoading } = trpc.useQuery(["issue.get-all-issues"]);
+const MyIssues = () => {
+  let [userId] = React.useState(() => {
+    if (typeof localStorage !== "undefined") {
+      return localStorage.getItem("user");
+    }
+  });
+
+  React.useEffect(() => {
+    if (!userId) {
+      Router.push("/");
+    }
+  });
+
+  const { data, isLoading } = trpc.useQuery([
+    "issue.get-all-your-issues",
+    {
+      userId,
+    },
+  ]);
   const { data: userData, isLoading: userLoading } = trpc.useQuery([
     "user.get-all-users",
   ]);
   if (isLoading || !data) return <div>Loading ....</div>;
   if (userLoading || !userData) return <div>Loading ....</div>;
 
-  let user = localStorage.getItem("user");
-  if (!user) {
-    Router.push("/");
-  }
+  console.log("userId", userId);
 
   return (
     <>
-      <Link href="my-issues">
-        <button>My Issues</button>
-      </Link>
       {data.map((issue) => {
         let userName = userData.find((user) => user.id === issue.userId)?.name;
 
@@ -39,4 +50,4 @@ const Issues = () => {
   );
 };
 
-export default Issues;
+export default MyIssues;

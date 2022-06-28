@@ -9,7 +9,7 @@ export const issueRouter = createRouter()
     },
   })
   .query("get-all-your-issues", {
-    input: z.object({ userId: z.string() }),
+    input: z.object({ userId: z.any() }),
     async resolve({ input }) {
       return await prisma.issue.findMany({
         where: {
@@ -31,7 +31,7 @@ export const issueRouter = createRouter()
   .mutation("create-issue", {
     input: z.object({
       title: z.string().min(5).max(5000),
-      userId: z.string(),
+      userId: z.any(),
     }),
     async resolve({ input }) {
       return await prisma.issue.create({
