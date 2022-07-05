@@ -31,6 +31,7 @@ export const issueRouter = createRouter()
   .mutation("create-issue", {
     input: z.object({
       title: z.string().min(5).max(5000),
+      description: z.string().min(5).max(5000),
       userId: z.any(),
     }),
     async resolve({ input }) {
@@ -38,6 +39,7 @@ export const issueRouter = createRouter()
         data: {
           title: input.title,
           userId: input.userId,
+          description: input.description,
         },
       });
     },
