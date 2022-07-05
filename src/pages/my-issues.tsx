@@ -1,22 +1,20 @@
-import type { NextPage } from "next";
-import Head from "next/head";
 import { trpc } from "../utils/trpc";
-import React from "react";
 import Router from "next/router";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const MyIssues = () => {
-  let [userId] = React.useState(() => {
+  let [userId] = useState(() => {
     if (typeof localStorage !== "undefined") {
       return localStorage.getItem("user");
     }
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!userId) {
       Router.push("/");
     }
-  });
+  }, []);
 
   const { data, isLoading } = trpc.useQuery([
     "issue.get-all-your-issues",
@@ -33,23 +31,41 @@ const MyIssues = () => {
   console.log("userId", userId);
 
   return (
-    <>
-      <Link href="create-issues">
-        <button>Create Issues</button>
-      </Link>
-      {data.map((issue) => {
-        let userName = userData.find((user) => user.id === issue.userId)?.name;
+    <div className="bg-zinc-200 p-6 min-h-screen">
+      <div className="flex justify-between">
+        <h1 className="text-2xl text-blue-600 font-bold">My Issues</h1>
+        <div>
+          <Link href="all-issues">
+            <button className="font-medium text-slate-900 hover:text-sky-700 font">
+              All Issues
+            </button>
+          </Link>
+          <Link href="create-issue">
+            <button className="font-medium text-slate-900 hover:text-sky-700 font px-3">
+              Create Issues
+            </button>
+          </Link>
+        </div>
+      </div>
+      <ul role="list" className="p-6 divide-y divide-slate-200">
+        {data.map((issue) => {
+          let userName = userData.find(
+            (user) => user.id === issue.userId
+          )?.name;
 
-        return (
-          <div key={issue.id}>
-            <Link href={`/issue/${issue.id}`}>
-              <a>{issue.title}</a>
-            </Link>
-            <span>Created by {userName}</span>
-          </div>
-        );
-      })}
-    </>
+          return (
+            <li className="flex flex-col bg-white p-4" key={issue.id}>
+              <Link href={`/issue/${issue.id}`}>
+                <a className="font-medium text-2xl text-slate-900 hover:text-sky-700 font">
+                  {issue.title}
+                </a>
+              </Link>
+              <span>Created by {userName}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
 
