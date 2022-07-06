@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { trpc } from "../../utils/trpc";
 import Router from "next/router";
 
-const CommentCreator = ({ id, userId }) => {
+const CommentCreator: FC<{ id: any; userId: any }> = ({ id, userId }) => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const client = trpc.useContext();
 	const { mutate, isLoading } = trpc.useMutation("comment.create-comment", {

@@ -43,7 +43,7 @@ const IssueCreator = () => {
         <textarea
           className="input input-bordered w-full rounded-md p-3 mb-6"
           placeholder="add description"
-          rows="5"
+          rows={5}
           {...register("description", { required: true })}
         ></textarea>
         <button
