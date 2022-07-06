@@ -26,14 +26,14 @@ const IssueCreator = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    mutate({ title: data.title, userId, description: data.description });
-  };
-
   return (
     <div className="bg-zinc-200 flex flex-col p-6 min-h-screen">
       <h1 className="text-2xl text-blue-600 font-bold mb-6">Create an Issue</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit((data) => {
+          mutate({ title: data.title, userId, description: data.description });
+        })}
+      >
         <input
           disabled={isLoading}
           className="input input-bordered w-full rounded-md p-3 mb-6"
